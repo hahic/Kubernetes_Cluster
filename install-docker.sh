@@ -21,4 +21,27 @@ $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev
 
 # 3. install docker-ce
 sudo apt-get update
-apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 20.10.23 | head -1 | awk '{print $3}')
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+
+# 4. set  docker cgroup driver 
+sudo mkdir /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+sudo systemctl enable docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+
+# 5. deactivate CRI of container.d runtime
+sudo sed -i "/disabled_plugins/s/^/#/" /etc/containerd/config.toml
+systemctl restart containerd
