@@ -25,6 +25,10 @@ EOF
 sudo sysctl --system
 
 
+# # 0-3. init crio
+# sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock
+
+
 # 1. install dependent packages
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
@@ -40,3 +44,7 @@ sudo apt-get update
 #sudo apt-get install -y kubeadm=1.26.0-00 kubelet=1.26.0-00 kubectl=1.26.0-00 
 sudo apt-get install -y kubeadm kubelet kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+
+
+# 4. pull image crio.socket
+sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock

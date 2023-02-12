@@ -48,4 +48,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable crio
 sudo systemctl start crio
 
-sudo crictl info
+# sudo crictl info
